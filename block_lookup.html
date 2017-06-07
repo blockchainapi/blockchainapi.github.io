@@ -1,0 +1,354 @@
+ <!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- load MUI -->
+    <link href="css/mui.min.css" rel="stylesheet" type="text/css" />
+    <script src="js/mui.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"></link>
+	   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+ <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+ <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+ <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+	<style type="text/css">
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: #e1e1e1;
+  border: 0px none #ffffff;
+  border-radius: 34px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c0c0c0;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #c0c0c0;
+}
+::-webkit-scrollbar-track {
+  background: #666666;
+  border: 0px none #ffffff;
+  border-radius: 36px;
+}
+::-webkit-scrollbar-track:hover {
+  background: #666666;
+}
+::-webkit-scrollbar-track:active {
+  background: #333333;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+li
+{
+ list-style:none;
+}
+ul{    margin-left: -24px;}
+li.keyStr {
+    font-size: 11px;
+}
+</style>
+  </head>
+  <body>
+  
+    <header class="mui-appbar mui--z1">
+  <!-- Appbar HTML goes here -->
+<div class="mui-container">
+  <table width="100%">
+    <tbody><tr class="mui--appbar-height">
+      <td class="mui--text-title">BlockChainAPI Viewer</td>
+      <td align="right">
+        <ul class="mui-list--inline mui--text-body2">
+          <li><a href="index.html"><i class="material-icons mui--align-middle" style="
+    color: white;
+    font-size: 20px;
+">home</i></a></li>
+          <li><a href="chart.html"><i class="material-icons mui--align-middle" style="
+    color: white;
+    font-size: 20px;
+">timeline</i></a></li>
+          <li><a href="code.html"><i class="material-icons mui--align-middle" style="
+    color: white;
+    font-size: 20px;
+">code</i></a></li>
+        </ul>
+      </td>
+    </tr>
+  </tbody></table>
+</div>
+</header>
+    <div class="mui-container" ng-app="myApp" ng-controller="myCtrl"><!-- example content -->
+	<div class="mui-container" >
+	
+<div class="mui-panel" id="sb" style="display:none">
+	  <div class="mui--text-left "><strong>Single Block</strong></div>
+	  <form action="block_lookup.html">
+	  <input type="hidden" value="sb" name="command" id="command"/>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Block Hash" id="block_hash" name="block_hash">
+	<button class="mui-btn mui-btn--raised mui-btn--primary" >Execute</button>
+  </form>
+  </div></div>
+  <div class="mui-panel" id="st" style="display:none">
+	  <div class="mui--text-left "><strong>Single Transaction</strong></div>
+	  <form action="block_lookup.html">
+	  <input type="hidden" value="st" name="command" id="command"/>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Tx Hash" id="block_hash" name="block_hash">
+	<button class="mui-btn mui-btn--raised mui-btn--primary" >Execute</button>
+  </form>
+  </div></div><div class="mui-panel" id="bh" style="display:none">
+	  <div class="mui--text-left "><strong>Block Height</strong></div>
+	  <form action="block_lookup.html">
+	  <input type="hidden" value="bh" name="command" id="command"/>
+	     <div class="mui-textfield">
+    <input type="number" placeholder="Height" id="block_hash" name="block_hash">
+	<button class="mui-btn mui-btn--raised mui-btn--primary" >Execute</button>
+  </form>
+  </div></div>
+  <div class="mui-panel" id="sa" style="display:none">
+	  <div class="mui--text-left "><strong>Single Address</strong></div>
+	  <form action="block_lookup.html">
+	  <input type="hidden" value="sa" name="command" id="command"/>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Address" id="block_hash" name="block_hash">
+	<button class="mui-btn mui-btn--raised mui-btn--primary" >Execute</button>
+  </form>
+  </div></div>
+  <div class="mui-panel" id="st" style="display:none">
+	  <div class="mui--text-left "><strong>Single Block</strong></div>
+	  <form action="block_lookup.html">
+	  <input type="hidden" value="st" name="command" id="command"/>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Tx Hash" id="block_hash" name="block_hash">
+	<button class="mui-btn mui-btn--raised mui-btn--primary" >Execute</button>
+  </form>
+  </div></div>
+  <div class="mui-panel" id="ma" style="display:none">
+	  <div class="mui--text-left "><strong>Multiple Address</strong></div>
+	  <form action="block_lookup.html">
+	  <input type="hidden" value="ma" name="command" id="command"/>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Address(separate with |)" id="block_hash" name="block_hash">
+	<button class="mui-btn mui-btn--raised mui-btn--primary" >Execute</button>
+  </form>
+  </div></div>
+  <div class="mui-panel" id="uo" style="display:none">
+	  <div class="mui--text-left "><strong>Unspent Outputs</strong></div>
+	  <form action="block_lookup.html">
+	  <input type="hidden" value="uo" name="command" id="command"/>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Address" id="block_hash" name="block_hash">
+	<button class="mui-btn mui-btn--raised mui-btn--primary" >Execute</button>
+  </form>
+  </div></div>
+  <div class="mui-panel" id="b" style="display:none">
+	  <div class="mui--text-left "><strong>Balance</strong></div>
+	  <form action="block_lookup.html">
+	  <input type="hidden" value="b" name="command" id="command"/>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Address" id="block_hash" name="block_hash">
+	<button class="mui-btn mui-btn--raised mui-btn--primary" >Execute</button>
+  </form>
+  </div></div>
+  <div class="mui-panel" id="bl" style="display:none">
+	  <div class="mui--text-left "><strong>Blocks</strong></div>
+	  <form action="block_lookup.html">
+	  <input type="hidden" value="bl" name="command" id="command"/>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Pool Name" id="block_hash" name="block_hash">
+	<button class="mui-btn mui-btn--raised mui-btn--primary" >Execute</button>
+  </form>
+  </div></div>
+  
+  
+  </div>
+
+	<div class="mui-panel"  style="display:none">
+	
+	  <div class="mui-container" >
+	  <strong>hash</strong>:  <small>{{hash}}</small>
+	  </div><div class="mui-container">
+	  <strong>ver</strong>:  <small>{{ver}}</small>
+	  </div><div class="mui-container">
+	  <strong>prev_block</strong>:  <small>{{prev_block}}</small>
+	  </div><div class="mui-container">
+	  <strong>mrkl_root</strong>:  <small>{{mrkl_root}}</small>
+	  </div><div class="mui-container">
+	  <strong>time</strong>:  <small>{{time}}</small>
+	  </div><div class="mui-container">
+	  <strong>bits</strong>:  <small>{{bits}}</small>
+	  </div><div class="mui-container">
+	  <strong>nonce</strong>:  <small>{{nonce}}</small>
+	  </div><div class="mui-container">
+	  <strong>n_tx</strong>:  <small>{{n_tx}}</small>
+	  </div><div class="mui-container">
+	  <strong>size</strong>:  <small>{{size}}</small>
+	  </div><div class="mui-container">
+	  <strong>block_index</strong>:  <small>{{block_index}}</small>
+	  </div><div class="mui-container">
+	  <strong>main_chain</strong>:  <small>{{main_chain}}</small>
+	  </div><div class="mui-container">
+	  <strong>height</strong>:  <small>{{height}}</small>
+	  </div><div class="mui-container">
+	  <strong>received_time</strong>:  <small>{{received_time}}</small>
+	  </div><div class="mui-container">
+	  <strong>relayed_b</strong>:  <small>{{relayed_b}}</small>
+	  </div>
+	</div>
+	<h2>Result</h2>
+	<div class="mui-container">
+	<div id="txs" class="mui-panel" style="
+    overflow-x: scroll;
+    background: black;
+    color: white;
+"></div></div>
+	
+	<script>
+	function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+	</script>
+	<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http,$timeout) {
+ command = getParameterByName("command",window.location.href);
+ value =  getParameterByName("block_hash",window.location.href);
+ if(command=='sb'){
+   $http.get('https://blockchain.info/rawblock/'+value+'?cors=true')
+    .then(function(response) {
+        $scope.hash = response.data.hash;
+        $scope.ver = response.data.ver;
+        $scope.prev_block = response.data.prev_block;
+        $scope.mrkl_root = response.data.mrkl_root;
+        $scope.time = response.data.time;
+        $scope.bits = response.data.bits;
+        $scope.nonce = response.data.nonce;
+        $scope.n_tx = response.data.n_tx;
+        $scope.size = response.data.size;
+        $scope.block_index = response.data.block_index;
+        $scope.main_chain = response.data.main_chain;
+        $scope.height = response.data.height;
+        $scope.received_time = response.data.received_time;
+        $scope.relayed_b = response.data.relayed_b;
+		$scope.txs = response.data.tx;
+		$('#txs').html(recurse(response.data));
+    });
+  }
+   if(command=='st'){
+   $http.get('https://blockchain.info/rawtx'+value+'?cors=true')
+    .then(function(response) {
+	  $('#txs').html(recurse(response.data));
+  });}
+  if(command=='bh'){
+   $http.get('https://blockchain.info/block-height/'+value+'?format=json&cors=true')
+    .then(function(response) {
+	  $('#txs').html(recurse(response.data));
+  });}
+  if(command=='sa'){
+   $http.get('https://blockchain.info/rawaddr/'+value+'?cors=true')
+    .then(function(response) {
+	  $('#txs').html(recurse(response.data));
+  });}
+  if(command=='ma'){
+   $http.get('https://blockchain.info/multiaddr?active='+value+'?cors=true')
+    .then(function(response) {
+	  $('#txs').html(recurse(response.data));
+  });}
+  if(command=='uo'){
+   $http.get('https://blockchain.info/unspent?active='+value+'?cors=true')
+    .then(function(response) {
+	  $('#txs').html(recurse(response.data));
+  });}
+  if(command=='b'){
+   $http.get('https://blockchain.info/balance?active='+value+'?cors=true')
+    .then(function(response) {
+	  $('#txs').html(recurse(response.data));
+  });}
+  if(command=='bl'){
+   $http.get('https://blockchain.info/blocks/'+value+'?format=json&cors=true')
+    .then(function(response) {
+	  $('#txs').html(recurse(response.data));
+  });}
+  if(command=='utx'){
+   $http.get('https://blockchain.info/unconfirmed-transactions?format=json&cors=true')
+    .then(function(response) {
+	  $('#txs').html(recurse(response.data));
+  });}
+  if(command=='lb'){
+   $http.get('https://blockchain.info/latestblock')
+    .then(function(response) {
+	  $('#txs').html(recurse(response.data));
+  });}
+});
+</script><script>
+var command;
+var value;
+ $(this).ready(function(){
+ command = getParameterByName("command",window.location.href);
+ value =  getParameterByName("block_hash",window.location.href);
+ 
+    var elem = $('#'+command);
+	//console.log(elem);
+	elem.show();
+ 
+ });
+ function loadUri(uri,func)
+ {
+     var xhr = new XMLHttpRequest();
+	 xhr.open("GET",uri,true);
+	 xhr.onreadystatechange=function(){if(xhr.readyState==4){func(xhr.response);}};
+	 xhr.send();
+ }
+function RunRecursive(jData){
+	for(var i in jData)
+	{
+	  resultBox.innerHTML += '<div class="mui-container"><ul class=""mui-panel>';
+		if(!(jData[i] instanceof Object))
+		{
+			resultBox.innerHTML += '<li><div class="mui-container"><strong class="mui--pull-left">'+i+'</strong>:  <span class="mui--pull-right" style="font-size:9px">'+jData[i]+'</span></div></li>';
+		}
+		else
+		{
+		    RunRecursive(jData[i]);
+		}
+	}
+	resultBox.innerHTML += "</ul></div>";
+	}
+
+	function recurse( data ) {
+  var htmlRetStr = '<ul style=" margin-left: -43px;" >'; 
+  for (var key in data) {
+        if (typeof(data[key])== 'object' && data[key] != null) {
+            htmlRetStr += "<li class='keyObj' ><strong>" + key + ":</strong><ul class='recurseSubObj ' >";
+            htmlRetStr += recurse( data[key] );
+            htmlRetStr += '</ul  ></li   >';
+        } else {
+            htmlRetStr += ("<li class='keyStr' ><strong>" + key + ': </strong>&quot;' + data[key] + '&quot;</li  >' );
+        }
+  };
+  htmlRetStr += '</ul >';    
+  return( htmlRetStr );
+}
+
+</script>
+  </body>
+</html>

@@ -1,0 +1,603 @@
+﻿<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- load MUI -->
+    <link href="css/mui.min.css" rel="stylesheet" type="text/css" />
+    <script src="js/mui.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"></link>
+	   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+ <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+ <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+ <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+	<style type="text/css">
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: #e1e1e1;
+  border: 0px none #ffffff;
+  border-radius: 34px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c0c0c0;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #c0c0c0;
+}
+::-webkit-scrollbar-track {
+  background: #666666;
+  border: 0px none #ffffff;
+  border-radius: 36px;
+}
+::-webkit-scrollbar-track:hover {
+  background: #666666;
+}
+::-webkit-scrollbar-track:active {
+  background: #333333;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+</style>
+  </head>
+  <body>
+  
+    <header class="mui-appbar mui--z1">
+  <!-- Appbar HTML goes here -->
+<div class="mui-container">
+  <table width="100%">
+    <tbody><tr class="mui--appbar-height">
+      <td class="mui--text-title">BlockChainAPI Viewer</td>
+      <td align="right">
+        <ul class="mui-list--inline mui--text-body2">
+          <li><a href="index.html"><i class="material-icons mui--align-middle" style="
+    color: white;
+    font-size: 20px;
+">home</i></a></li>
+          <li><a href="chart.html"><i class="material-icons mui--align-middle" style="
+    color: white;
+    font-size: 20px;
+">timeline</i></a></li>
+          <li><a href="code.html"><i class="material-icons mui--align-middle" style="
+    color: white;
+    font-size: 20px;
+">code</i></a></li>
+        </ul>
+      </td>
+    </tr>
+  </tbody></table>
+</div>
+</header>
+    <div class="mui-container" ng-app="myApp" ng-controller="myCtrl"><!-- example content -->
+	<ul class="mui-tabs__bar">
+  <li class="mui--is-active"><a data-mui-toggle="tab" data-mui-controls="pane-default-1">Realtime</a></li>
+  <li><a data-mui-toggle="tab" data-mui-controls="pane-default-2">Address Lookup</a></li>
+  <li><a data-mui-toggle="tab" data-mui-controls="pane-default-2-1">Block Data Lookup</a></li>
+  <li><a data-mui-toggle="tab" data-mui-controls="pane-default-3">Transaction Lookups</a></li>
+  <li><a data-mui-toggle="tab" data-mui-controls="pane-default-4">Tools</a></li>
+  <li><a data-mui-toggle="tab" data-mui-controls="pane-default-5">Misc</a></li>
+</ul>
+<div class="mui-tabs__pane mui--is-active" id="pane-default-1"> 
+<div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left mui--pull-left"><strong>Difficulty</strong></div>
+<div class="mui--text-right">{{difficulty}}</div>
+      </div>
+<div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left mui--pull-left"><strong>Block Count</strong></div>
+<div class="mui--text-right">{{blockcount}}</div>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left"><strong>Latest Hash</strong></div>
+<div class="mui--text-right"><small style="
+    font-size: 8px;
+">{{latesthash}}</small></div>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left mui--pull-left"><strong>BTC Per Block</strong></div>
+<div class="mui--text-right">{{btcperblock}}</div>
+      </div>	
+<div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left mui--pull-left"><strong>Total Btc</strong></div>
+<div class="mui--text-right">฿{{totalbc}}</div>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left"><strong>Probabilty</strong></div>
+<div class="mui--text-right">{{probability}}</div>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left"><strong>Hashes To Win</strong></div>
+<div class="mui--text-right">{{hashestowin}}</div>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left"><strong>Next Retarget</strong></div>
+<div class="mui--text-right">{{nextretarget}}</div>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left"><strong>Avg Tx Size</strong></div>
+<div class="mui--text-right">{{avgtxsize}}</div>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left"><strong>Avg Tx Value</strong></div>
+<div class="mui--text-right">{{avgtxvalue}}</div>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left"><strong>Interval</strong></div>
+<div class="mui--text-right">{{interval}}</div>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left"><strong>ETA</strong></div>
+<div class="mui--text-right">{{eta}}</div>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left"><strong>Avg Tx Number</strong></div>
+<div class="mui--text-right">{{avgtxnumber}}</div>
+      </div>	  
+	  </div>
+<div class="mui-tabs__pane" id="pane-default-2">
+<div class="mui-panel">
+	  <div class="mui--text-left "><strong>Get Received By Address</strong></div>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Address" id="input1">
+  </div>
+  <button class="mui-btn mui-btn--raised mui-btn--primary" ng-click="GetReceivedByAddress()">Execute</button>
+  <h3>฿{{getreceivedbyaddress}}</h3>
+      </div>
+	  <div class="mui-panel">
+	  <div class="mui--text-left "><strong>Get Sent By Address</strong></div>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Address" id="input2">
+  </div>
+  <button class="mui-btn mui-btn--raised mui-btn--primary" ng-click="GetSentByAddress()">Execute</button>
+  <h3>฿{{getsentbyaddress}}</h3>
+      </div>
+	  <div class="mui-panel">
+	  <div class="mui--text-left "><strong>Address Balance</strong></div>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Address" id="input3">
+  </div>
+  <button class="mui-btn mui-btn--raised mui-btn--primary" ng-click="GetAddressBalance()">Execute</button>
+  <h3>฿{{addressbalance}}</h3>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left "><strong>Address First Seen</strong></div>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Address" id="input4">
+  </div>
+  <button class="mui-btn mui-btn--raised mui-btn--primary" ng-click="GetAddressFirstSeen()">Execute</button>
+  <h3>{{addressfirstseen}}</h3>
+      </div>
+	  </div>
+	  <div class="mui-tabs__pane" id="pane-default-2-1">
+<div class="mui-panel">
+	  <div class="mui--text-left "><strong>Single Block</strong></div>
+	  <form action="block_lookup.html">
+	  <input type="hidden" value="sb" name="command" id="command"/>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Block Hash" id="block_hash" name="block_hash">
+	<button class="mui-btn mui-btn--raised mui-btn--primary" >Execute</button>
+  </form>
+  </div></div>
+  <div class="mui-panel">
+	  <div class="mui--text-left "><strong>Single Transaction</strong></div>
+	  <form action="block_lookup.html">
+	  <input type="hidden" value="st" name="command" id="command"/>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Tx Hash" id="block_hash" name="block_hash">
+	<button class="mui-btn mui-btn--raised mui-btn--primary" >Execute</button>
+  </form>
+  </div></div><div class="mui-panel">
+	  <div class="mui--text-left "><strong>Block Height</strong></div>
+	  <form action="block_lookup.html">
+	  <input type="hidden" value="bh" name="command" id="command"/>
+	     <div class="mui-textfield">
+    <input type="number" placeholder="Height" id="block_hash" name="block_hash">
+	<button class="mui-btn mui-btn--raised mui-btn--primary" >Execute</button>
+  </form>
+  </div></div>
+  <div class="mui-panel">
+	  <div class="mui--text-left "><strong>Single Address</strong></div>
+	  <form action="block_lookup.html">
+	  <input type="hidden" value="sa" name="command" id="command"/>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Address" id="block_hash" name="block_hash">
+	<button class="mui-btn mui-btn--raised mui-btn--primary" >Execute</button>
+  </form>
+  </div></div>
+  <div class="mui-panel">
+	  <div class="mui--text-left "><strong>Single Block</strong></div>
+	  <form action="block_lookup.html">
+	  <input type="hidden" value="st" name="command" id="command"/>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Tx Hash" id="block_hash" name="block_hash">
+	<button class="mui-btn mui-btn--raised mui-btn--primary" >Execute</button>
+  </form>
+  </div></div>
+  <div class="mui-panel">
+	  <div class="mui--text-left "><strong>Multiple Address</strong></div>
+	  <form action="block_lookup.html">
+	  <input type="hidden" value="ma" name="command" id="command"/>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Address(separate with |)" id="block_hash" name="block_hash">
+	<button class="mui-btn mui-btn--raised mui-btn--primary" >Execute</button>
+  </form>
+  </div></div>
+  <div class="mui-panel">
+	  <div class="mui--text-left "><strong>Unspent Outputs</strong></div>
+	  <form action="block_lookup.html">
+	  <input type="hidden" value="uo" name="command" id="command"/>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Address" id="block_hash" name="block_hash">
+	<button class="mui-btn mui-btn--raised mui-btn--primary" >Execute</button>
+  </form>
+  </div></div>
+  <div class="mui-panel">
+	  <div class="mui--text-left "><strong>Balance</strong></div>
+	  <form action="block_lookup.html">
+	  <input type="hidden" value="b" name="command" id="command"/>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Address" id="block_hash" name="block_hash">
+	<button class="mui-btn mui-btn--raised mui-btn--primary" >Execute</button>
+  </form>
+  </div></div>
+  <div class="mui-panel">
+	  <div class="mui--text-left "><strong>Blocks</strong></div>
+	  <form action="block_lookup.html">
+	  <input type="hidden" value="bl" name="command" id="command"/>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Pool Name" id="block_hash" name="block_hash">
+	<button class="mui-btn mui-btn--raised mui-btn--primary" >Execute</button>
+  </form>
+  </div></div>
+  
+  <div class="mui-panel">
+	 <form action="block_lookup.html">
+	  <input type="hidden" value="utx" name="command" id="command"/>
+	 <button style="
+    width: 100%;
+" class="mui-btn mui-btn--raised mui-btn--primary" >Unconfirmed Transactions</button></form>
+	 <form action="block_lookup.html">
+	  <input type="hidden" value="lb" name="command" id="command"/>
+	 <button style="
+    width: 100%;
+" class="mui-btn mui-btn--raised mui-btn--primary" >Latest Block</button></form>
+  </div>
+  </div>
+<div class="mui-tabs__pane" id="pane-default-3">
+<div class="mui-panel">
+	  <div class="mui--text-left "><strong>Total Bitcoin Output</strong></div>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="TxHash" id="input5">
+  </div>
+  <button class="mui-btn mui-btn--raised mui-btn--primary" ng-click="GetTotalBitcoinOutput()">Execute</button>
+  <h3>฿{{txtotalbtcoutput}}</h3>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left "><strong>Total Bitcoin Input</strong></div>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="TxHash" id="input6">
+  </div>
+  <button class="mui-btn mui-btn--raised mui-btn--primary" ng-click="GetTotalBitcoinInput()">Execute</button>
+  <h3>฿{{txtotalbtcinput}}</h3>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left "><strong>Tx Fee</strong></div>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="TxHash" id="input7">
+  </div>
+  <button class="mui-btn mui-btn--raised mui-btn--primary" ng-click="GetTxFee()">Execute</button>
+  <h3>฿{{txfee}}</h3>
+      </div>
+	  <div class="mui-panel">
+	  <div class="mui--text-left "><strong>Get Received By Address</strong></div>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Address(Multiple addresses seperated by |)" id="input8">
+  </div><div class="mui-textfield">
+    <input type="text" placeholder="TxHash" id="input9">
+  </div>
+  <button class="mui-btn mui-btn--raised mui-btn--primary" ng-click="GetTxResult()">Execute</button>
+  <h3>฿{{txresult}}</h3>
+      </div></div>
+<div class="mui-tabs__pane" id="pane-default-4">
+<div class="mui-panel">
+	  <div class="mui--text-left "><strong>Convert Address To Hash</strong></div>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Address" id="input10">
+  </div>
+  <button class="mui-btn mui-btn--raised mui-btn--primary" ng-click="AddressToHash()">Execute</button>
+  <h3>฿{{addresstohash}}</h3>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left "><strong>Convert Hash To Address</strong></div>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="TxHash" id="input11">
+  </div>
+  <button class="mui-btn mui-btn--raised mui-btn--primary" ng-click="HashToAddress()">Execute</button>
+  <h3>฿{{hashtoaddress}}</h3>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left "><strong>Convert PubKey To Hash</strong></div>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="PubKey" id="input12">
+  </div>
+  <button class="mui-btn mui-btn--raised mui-btn--primary" ng-click="PubKeyToHash()">Execute</button>
+  <h3>฿{{hashpubkey}}</h3>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left "><strong>Convert PubKey To Address</strong></div>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="Pubkey" id="input13">
+  </div>
+  <button class="mui-btn mui-btn--raised mui-btn--primary" ng-click="PubKeyToAddress()">Execute</button>
+  <h3>฿{{addrpubkey}}</h3>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left "><strong>Convert Address To PubKey</strong></div>
+	     <div class="mui-textfield">
+    <input type="text" placeholder="ddress" id="input14">
+  </div>
+  <button class="mui-btn mui-btn--raised mui-btn--primary" ng-click="AddressToPubKey()">Execute</button>
+  <h3>฿{{pubkeyaddr}}</h3>
+      </div></div>
+<div class="mui-tabs__pane" id="pane-default-5"><div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left"><strong>Unconfirmed Tx</strong></div>
+<div class="mui--text-right">{{unconfirmedcount}}</div>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left"><strong>24hr Price</strong></div>
+<div class="mui--text-right">฿{{_24hrprice}}</div>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left"><strong>Market Cap</strong></div>
+<div class="mui--text-right">฿{{marketcap}}</div>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left"><strong>24hr Tx</strong></div>
+<div class="mui--text-right">{{_24hrtransactioncount}}</div>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left"><strong>24hr BTC Sent</strong></div>
+<div class="mui--text-right">฿{{_24hrbtcsent}}</div>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left"><strong>Hash Rate</strong></div>
+<div class="mui--text-right">{{hashrate}}</div>
+      </div><div class="mui-panel">
+	  <div class="mui--text-left mui--pull-left"><strong>Rejected</strong></div>
+<div class="mui--text-right">{{_rejected}}</div>
+      </div></div>
+     <h5 class="mui--text-center">Powered by <a href="https://blockchain.info">BlockChain</a></h5>
+    <div id="modal1" style="display: none;">
+	<div style="
+    padding: 5px;
+    box-sizing: border-box;
+"><h3 class="mui--text-center">Convert to BTC</h3>
+	  <div class="mui-select"><select  id="select1">
+	  <option  ng-repeat="x in currency" value="{{x}}">{{x}}</option>
+	</select>
+	
+  </div><div class="mui-textfield">
+    <input type="number" placeholder="Amount" id="amount">
+	 </div>
+	 <h3>{{tobtc}}</h3>
+	 <p class="mui--text-center"><button class="mui-btn mui-btn--raised mui-btn--primary" ng-click="ToBtc()">Execute</button></p>
+  </div>
+	</div>
+	</div>
+	<div id="donut-example"></div>
+	<script>
+	var currencies=[];
+	var jData;
+	var interval=7000;
+	var options = {
+    'keyboard': true, // teardown when <esc> key is pressed (default: true)
+    'static': true, // maintain overlay when clicked (default: false)
+    'onclose': function() {} // execute function when overlay is closed
+  };
+  var childEl = document.createElement('div');
+  childEl.innerHTML = '<center><h3><i class="material-icons" style="color:white;font-size:48px;'+
+  '-webkit-animation:spin 4s linear infinite;-moz-animation:spin 4s linear infinite;animation:spin 4s linear infinite;">3d_rotation</i></h3></center>';
+  mui.overlay('on', options,childEl);
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http,$timeout) {
+$scope.currency=[];
+/*$http.get("https://blockchain.info/q/interval?cors=true")
+    .then(function(response) {
+        interval = Number(response.data)+2300;
+    });*/
+$timeout(function () {
+    $http.get("https://blockchain.info/q/getdifficulty?cors=true")
+    .then(function(response) {
+        $scope.difficulty = Number(response.data);
+    });$http.get("https://blockchain.info/q/getblockcount?cors=true")
+    .then(function(response) {
+        $scope.blockcount = response.data;
+    });$http.get("https://blockchain.info/q/latesthash?cors=true")
+    .then(function(response) {
+        $scope.latesthash = response.data;
+    });$http.get("https://blockchain.info/q/bcperblock?cors=true")
+    .then(function(response) {
+        $scope.btcperblock = response.data;
+    });$http.get("https://blockchain.info/q/totalbc?cors=true")
+    .then(function(response) {
+        $scope.totalbc = response.data;
+    });$http.get("https://blockchain.info/q/probability?cors=true")
+    .then(function(response) {
+        $scope.probability = response.data;
+    });$http.get("https://blockchain.info/q/hashestowin?cors=true")
+    .then(function(response) {
+        $scope.hashestowin = response.data;
+    });$http.get("https://blockchain.info/q/nextretarget?cors=true")
+    .then(function(response) {
+        $scope.nextretarget = response.data;
+    });$http.get("https://blockchain.info/q/avgtxsize?cors=true")
+    .then(function(response) {
+        $scope.avgtxsize = response.data;
+    });$http.get("https://blockchain.info/q/avgtxvalue?cors=true")
+    .then(function(response) {
+        $scope.avgtxvalue = response.data;
+    });$http.get("https://blockchain.info/q/interval?cors=true")
+    .then(function(response) {
+        $scope.interval = response.data;
+    });$http.get("https://blockchain.info/q/eta?cors=true")
+    .then(function(response) {
+        $scope.eta = response.data;
+    });$http.get("https://blockchain.info/q/avgtxnumber?cors=true")
+    .then(function(response) {
+        $scope.avgtxnumber = response.data;
+    });$http.get("https://blockchain.info/q/unconfirmedcount?cors=true")
+    .then(function(response) {
+        $scope.unconfirmedcount = response.data;
+    });$http.get("https://blockchain.info/q/24hrprice?cors=true")
+    .then(function(response) {
+        $scope._24hrprice = response.data;
+    });$http.get("https://blockchain.info/q/marketcap?cors=true")
+    .then(function(response) {
+        $scope.marketcap = response.data;
+    });$http.get("https://blockchain.info/q/24hrtransactioncount?cors=true")
+    .then(function(response) {
+        $scope._24hrtransactioncount = response.data;
+    });$http.get("https://blockchain.info/q/24hrbtcsent?cors=true")
+    .then(function(response) {
+        $scope._24hrbtcsent = response.data;
+    });$http.get("https://blockchain.info/q/hashrate?cors=true")
+    .then(function(response) {
+        $scope.hashrate = response.data;
+    });$http.get("https://blockchain.info/q/rejected?cors=true")
+    .then(function(response) {
+        $scope._rejected = response.data;
+    });
+	$http.get("https://blockchain.info/ticker?cors=true")
+    .then(function(response) {
+	    for(var i in response.data){
+		$scope.currency.push(i);
+		}
+		jData = response.data;
+    });
+	 mui.overlay('off');
+	},interval);
+	$scope.getreceivedbyaddress=0;
+        
+	$scope.GetReceivedByAddress = function() {
+	    var address = document.getElementById('input1').value;
+		$http.get("https://blockchain.info/q/getreceivedbyaddress/"+address+"?cors=true")
+    .then(function(response) {
+        $scope.getreceivedbyaddress = response.data;
+		
+    });
+   }
+   $scope.GetSentByAddress = function() {
+	    var address = document.getElementById('input2').value;
+		$http.get("https://blockchain.info/q/getsentbyaddress/"+address+"?cors=true")
+    .then(function(response) {
+        $scope.getsentbyaddress = response.data;
+		
+    });
+   } 
+   $scope.GetAddressBalance = function() {
+	    var address = document.getElementById('input3').value;
+		$http.get("https://blockchain.info/q/addressbalance/"+address+"?cors=true")
+    .then(function(response) {
+        $scope.addressbalance = response.data;
+		
+    });
+   }
+   $scope.GetAddressFirstSeen = function() {
+	    var address = document.getElementById('input4').value;
+		$http.get("https://blockchain.info/q/addressfirstseen/"+address+"?cors=true")
+    .then(function(response) {
+        $scope.addressfirstseen = response.data;
+		
+    });
+   }
+    $scope.GetTotalBitcoinOutput = function() {
+	    var address = document.getElementById('input5').value;
+		$http.get("https://blockchain.info/q/txtotalbtcoutput/"+address+"?cors=true")
+    .then(function(response) {
+        $scope.txtotalbtcoutput = response.data;
+		
+    });
+   }
+   $scope.GetTotalBitcoinInput = function() {
+	    var address = document.getElementById('input6').value;
+		$http.get("https://blockchain.info/q/txtotalbtcinput/"+address+"?cors=true")
+    .then(function(response) {
+        $scope.txtotalbtcinput = response.data;
+		
+    });
+   }
+   $scope.GetTxFee = function() {
+	    var address = document.getElementById('input7').value;
+		$http.get("https://blockchain.info/q/txfee/"+address+"?cors=true")
+    .then(function(response) {
+        $scope.txfee = response.data;
+		
+    });
+   }
+   $scope.GetTxResult = function() {
+	    var hash = document.getElementById('input9').value;
+	    var address = document.getElementById('input8').value;
+		$http.get("https://blockchain.info/q/txresult/"+hash+"/"+address+"?cors=true")
+    .then(function(response) {
+        $scope.txresult = response.data;
+		
+    });
+   }
+   $scope.AddressToHash = function() {
+	    var address = document.getElementById('input10').value;
+		$http.get("https://blockchain.info/q/addresstohash/"+address+"?cors=true")
+    .then(function(response) {
+        $scope.addresstohash = response.data;
+		
+    });
+   }
+   $scope.HashToAddress = function() {
+	    var address = document.getElementById('input11').value;
+		$http.get("https://blockchain.info/q/hashtoaddress/"+address+"?cors=true")
+    .then(function(response) {
+        $scope.hashtoaddress = response.data;
+		
+    });
+   }
+   $scope.PubKeyToHash = function() {
+	    var address = document.getElementById('input12').value;
+		$http.get("https://blockchain.info/q/hashpubkey/"+address+"?cors=true")
+    .then(function(response) {
+        $scope.hashpubkey = response.data;
+		
+    });
+   }
+   $scope.PubKeyToAddress = function() {
+	    var address = document.getElementById('input13').value;
+		$http.get("https://blockchain.info/q/addrpubkey/"+address+"?cors=true")
+    .then(function(response) {
+        $scope.addrpubkey = response.data;
+		
+    });
+   }
+   $scope.AddressToPubKey = function() {
+	    var address = document.getElementById('input14').value;
+		$http.get("https://blockchain.info/q/pubkeyaddr/"+address+"?cors=true")
+    .then(function(response) {
+        $scope.pubkeyaddr = response.data;
+		
+    });
+   }
+   $scope.ToBtc = function() {console.log('');
+        var curr = document.getElementById('select1').value;
+	    var amount = document.getElementById('amount').value;
+		$http.get("https://blockchain.info/tobtc?cors=true")
+    .then(function(response) {
+        $scope.tobtc = jData[curr]['symbol']+response.data;
+		
+    });
+   }
+   
+   
+});
+</script>
+<script>function activateModal() {
+    // initialize modal element
+    var modalEl = document.createElement('div');
+	modalEl.style.width = '400px';
+    modalEl.style.height = '300px';
+    modalEl.style.margin = '100px auto';
+    modalEl.style.backgroundColor = '#fff';
+
+	var modal1=document.getElementById('modal1');
+	modalEl.innerHTML = modal1.innerHTML;
+    // show modal
+    mui.overlay('on', modalEl);
+  }</script>
+  </body>
+</html>

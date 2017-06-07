@@ -1,0 +1,178 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- load MUI -->
+    <link href="css/mui.min.css" rel="stylesheet" type="text/css" />
+    <script src="js/mui.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"></link>
+	   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+ <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+ <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+ <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+	<style type="text/css">
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: #e1e1e1;
+  border: 0px none #ffffff;
+  border-radius: 34px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c0c0c0;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #c0c0c0;
+}
+::-webkit-scrollbar-track {
+  background: #666666;
+  border: 0px none #ffffff;
+  border-radius: 36px;
+}
+::-webkit-scrollbar-track:hover {
+  background: #666666;
+}
+::-webkit-scrollbar-track:active {
+  background: #333333;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+</style>
+  </head>
+  <body>
+  
+    <header class="mui-appbar mui--z1">
+  <!-- Appbar HTML goes here -->
+<div class="mui-container">
+  <table width="100%">
+    <tbody><tr class="mui--appbar-height">
+      <td class="mui--text-title">BlockChainAPI Viewer</small></td>
+      <td align="right">
+        <ul class="mui-list--inline mui--text-body2">
+          <li><a href="index.html"><i class="material-icons mui--align-middle" style="
+    color: white;
+    font-size: 20px;
+">home</i></a></li>
+          <li><a href="chart.html"><i class="material-icons mui--align-middle" style="
+    color: white;
+    font-size: 20px;
+">timeline</i></a></li>
+          <li><a href="code.html"><i class="material-icons mui--align-middle" style="
+    color: white;
+    font-size: 20px;
+">code</i></a></li>
+        </ul>
+      </small></td>
+    </tr>
+  </tbody></table>
+</div>
+</header>
+    <div class="mui-container" ng-app="myApp" ng-controller="myCtrl"><!-- example content -->
+	<table class="mui-table">
+  <thead>
+    <tr>
+      <th>Symbol</th>
+      <th>last</th>
+      <th>buy</th>
+      <th>sell</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="x in tickers"><td><small><small>{{x.currency}} ({{x.symbol}})</small></small></td>
+	<td><small> {{x.last}}</small></td><td><small>{{x.buy}}</small></td><td><small>{{x.sell}}</small></td></tr></tbody></table>
+	<div class="mui-panel">
+	<h3>Pools</h3>
+  <!-- content -->
+  
+	<div id="donut-example"></div>
+</div><div class="mui-panel">
+	<h3>Market Price</h3>
+  <!-- content -->
+  
+  <div id="line-example"></div>
+</div>
+	</div>
+	<script>
+	var timespan='5days';
+	var options = {
+    'keyboard': true, // teardown when <esc> key is pressed (default: true)
+    'static': true, // maintain overlay when clicked (default: false)
+    'onclose': function() {} // execute function when overlay is closed
+  };
+  var tickers=[];
+  var childEl = document.createElement('div');
+  childEl.innerHTML = '<center><h3><i class="material-icons" style="color:white;font-size:48px;'+
+  '-webkit-animation:spin 4s linear infinite;-moz-animation:spin 4s linear infinite;animation:spin 4s linear infinite;">3d_rotation</i></h3></center>';
+  mui.overlay('on', options,childEl);
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http,$timeout) {
+
+   $scope.tickers=[];
+   $http.get("https://blockchain.info/ticker?cors=true")
+    .then(function(response) {
+	 for(var i in response.data){
+	 $scope.tickers.push({'currency':i,'delay':response.data[i]['15m'],'delay':response.data[i]['15m'],
+	  'last':response.data[i]['last'],'buy':response.data[i]['buy'],'sell':response.data[i]['sell'],'symbol':response.data[i]['symbol']});
+    }});
+});
+</script>
+<script>
+ $(this).ready(function(){
+ HandlePoolChart();
+ HandleMarketPriceChart();
+	 mui.overlay('off');
+  });
+  function HandlePoolChart(){
+  var data=[];
+var xhr=new XMLHttpRequest();
+xhr.open('GET','https://api.blockchain.info/pools?timespan='+timespan+'&cors=true',true);
+xhr.send();
+xhr.onreadystatechange=function(){if(xhr.readyState==4){var jjData = JSON.parse(xhr.response);
+for(var i in jjData){data.push({"label":i,"value":jjData[i]})};
+Morris.Donut({
+  element: 'donut-example',
+  data: data
+});};
+}}
+function toDateTime(secs) {
+    var t = new Date(1970, 0, 1); // Epoch
+    t.setSeconds(secs);
+    return t;
+}
+function HandleMarketPriceChart(){
+
+var data=[];
+var xhr=new XMLHttpRequest();
+xhr.open('GET','https://api.blockchain.info/charts/market-price?format=json&cors=true',true);
+xhr.send();
+xhr.onreadystatechange=function(){if(xhr.readyState==4){var jjData = JSON.parse(xhr.response);
+for(var i in jjData["values"]){data.push({"x":jjData["values"][i]['x'],"y":jjData["values"][i]['y']})};
+console.log(data);
+Morris.Line({
+  element: 'line-example',
+  data: data,
+  xlabels:"year",
+  xkey: 'x',
+  ykeys: ['y'],
+  dateFormat:function(x){return toDateTime(x);},
+  xLabelFormat:function(x){ return toDateTime(x).toLocaleDateString()},
+  pointSize:0,
+  labels: ['USD','Time']});
+}}}
+</script>
+  </body>
+</html>
